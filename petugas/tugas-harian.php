@@ -172,8 +172,7 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                     $flag1 = 0; 
                     $flag2 = 0;
                     $skipSesudah = 0;
-                    for ($i = 0; $i <= count($tugas)-1; $i++) {
-                        ${"tugasId$i"} =  $tugas[$i]['id']; ?>
+                    for ($i = 0; $i <= count($tugas)-1; $i++) { ?>
                         <h4 class="card-title">
                             <?php echo ($i+1) . ". " . $tugas[$i]['details'] ?>
                         </h4>

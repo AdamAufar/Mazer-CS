@@ -86,7 +86,7 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
 
             <li
                 class="sidebar-item ">
-                <a href="index.html" class='sidebar-link'>
+                <a href="lihat-komplain.php" class='sidebar-link'>
                     <i class="bi bi-list-task"></i>
                     <span>Lihat Komplain</span>
                 </a>
