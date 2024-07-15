@@ -1,6 +1,12 @@
 <?php 
-
+ob_start();
 include_once "header-main.php";
+
+if (!isset($_SESSION['id']) || $_SESSION['id'] == "") {
+    header('Location: ../auth-login.php');
+    exit(); // Always use exit() after header redirect
+}
+
 
 // Date Datas
 $currentDate = date('Y-m-d', time());
@@ -9,30 +15,76 @@ $lastDate = date("Y-m-t", strtotime($currentDate));
 
 $id = $_SESSION['id'];
 
-echo "Before";
-echo $_POST['btnUploadSebelum'];
-print_r($_POST['btnUploadSebelum']);
-if (isset($_POST['btnUploadSebelum'])) {
-    echo "After";
-    echo $_POST['btnUploadSebelum'];
-    print_r($_POST['btnUploadSebelum']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSebelum'])) {
     unset($_POST['btnUploadSebelum']);
-    if (isset($_FILES['sebelumFoto'])) 
+    if (isset($_FILES['sebelumFoto'])) {
         $file = $_FILES['sebelumFoto'];
-    else
-        echo 'ERORROOROR';
+        
+        // Copy to uploads folder
+        $target_dir = '../uploads/tugasHarian/';
+        $target_file = $target_dir . basename($file['name']);
+        $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
+        $filename = $target_dir . uniqid() . ".". $file_ext;
 
-    // Copy to uploads folder
-    $target_dir = '../uploads/';
-    $target_file = $target_dir . basename($file['name']);
-    $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
-    $filename = $target_dir . uniqid() . ".". $file_ext;
-    // move_uploaded_file($file['tmp_name'], $filename);
+        if (move_uploaded_file($file['tmp_name'], $filename)) {
+            // Get tugas_id from POST data
+            $tugas_id = $_POST['tugas_id'];
 
-    // INSERT absensi photo into database
-    $sql = "INSERT INTO `absensi`(`user_id`, `filename`) VALUES ('$id','$filename')";
-    $insert_result = mysqli_query($conn, $sql);
-} else {
+            // INSERT absensi photo into database
+            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`) 
+                    VALUES ('$tugas_id', '$filename', 0)";
+            if (mysqli_query($conn, $sql)) {
+                // Redirect to avoid form resubmission
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            } else {
+                echo 'Database insert failed: ' . mysqli_error($conn) . '<br>';
+            }
+        } else {
+            echo 'File upload failed<br>';
+        }
+    } else {
+        echo 'Error: No file uploaded<br>';
+    }
+}
+ else {
+    $_SESSION['error_message'] = "No photo data received!";
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
+    unset($_POST['btnUploadSesudah']);
+    if (isset($_FILES['sesudahFoto'])) {
+        $file = $_FILES['sesudahFoto'];
+        
+        // Copy to uploads folder
+        $target_dir = '../uploads/tugasHarian/';
+        $target_file = $target_dir . basename($file['name']);
+        $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
+        $filename = $target_dir . uniqid() . ".". $file_ext;
+
+        if (move_uploaded_file($file['tmp_name'], $filename)) {
+            // Get tugas_id from POST data
+            $tugas_id = $_POST['tugas_id'];
+
+            // INSERT absensi photo into database
+            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`) 
+                    VALUES ('$tugas_id', '$filename', 1)";
+            if (mysqli_query($conn, $sql)) {
+                // Redirect to avoid form resubmission
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            } else {
+                echo 'Database insert failed: ' . mysqli_error($conn) . '<br>';
+            }
+        } else {
+            echo 'File upload failed<br>';
+        }
+    } else {
+        echo 'Error: No file uploaded<br>';
+    }
+}
+ else {
     $_SESSION['error_message'] = "No photo data received!";
 }
 
@@ -42,9 +94,8 @@ $sql = "SELECT id, details
         FROM tugas_harian 
         WHERE lokasi='$lokasi'";
 $result1 = mysqli_query($conn, $sql);
-$tugas = mysqli_fetch_all($result1);
+$tugas = mysqli_fetch_all($result1, MYSQLI_ASSOC);
 if (!$result1) die('Error executing query: ' . mysqli_error($conn));
-
 
 // GET id tugas dari $lokasi
 $sql = "SELECT id
@@ -58,15 +109,13 @@ while ($row = $result2->fetch_assoc()) {
 }
 $string_version = implode(',', $all_tugas_id);
 
-
 // GET image tugas harian sebelum yg sudah di upload
 $sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
         FROM image_tugas_harian 
         WHERE tugas_id IN ($string_version) AND status = 0";
 $result3 = mysqli_query($conn, $sql);
 if (!$result3) die('Error executing query: ' . mysqli_error($conn));
-$tugas_images_sebelum = mysqli_fetch_all($result3);
-
+$tugas_images_sebelum = mysqli_fetch_all($result3, MYSQLI_ASSOC);
 
 // GET image tugas harian sesudah yg sudah di upload
 $sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
@@ -74,7 +123,7 @@ $sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_
         WHERE tugas_id IN ($string_version) AND status = 1";
 $result4 = mysqli_query($conn, $sql);
 if (!$result4) die('Error executing query: ' . mysqli_error($conn));
-$tugas_images_sesudah = mysqli_fetch_all($result4);
+$tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
 
 ?>
 
@@ -124,9 +173,9 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                     $flag2 = 0;
                     $skipSesudah = 0;
                     for ($i = 0; $i <= count($tugas)-1; $i++) {
-                        ${"tugasId$i"} =  $tugas[$i][0]; ?>
+                        ${"tugasId$i"} =  $tugas[$i]['id']; ?>
                         <h4 class="card-title">
-                            <?php echo ($i+1) . ". " . $tugas[$i][1] ?>
+                            <?php echo ($i+1) . ". " . $tugas[$i]['details'] ?>
                         </h4>
                         <br>
                         <div class="row">
@@ -136,27 +185,23 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                                     <div class="card-body">
                                         <div class="card-content">
                                             <?php 
-                                            for ($j = 0; $j <= count($tugas)-1; $j++) {
-                                                if (isset($tugas_images_sebelum[$j][0]) && $tugas_images_sebelum[$j][0] == $tugas[$i][0]){ 
+                                            for ($j = 0; $j <= count($tugas_images_sebelum)-1; $j++) {
+                                                if (isset($tugas_images_sebelum[$j]['tugas_id']) && $tugas_images_sebelum[$j]['tugas_id'] == $tugas[$i]['id']){ 
                                                     $flag1 = 1; ?>
-                                                    <h4 class="card-title">Sebelum | Difoto : <?php echo $tugas_images_sebelum[$j][2] ?></h4>
+                                                    <h4 class="card-title">Sebelum | Difoto : <?php echo $tugas_images_sebelum[$j]['created_at'] ?></h4>
                                                     <img class="card-img-bottom img-fluid" 
-                                                         src="<?php echo "../" . $tugas_images_sebelum[$j][1] ?>"
-                                                         alt="Image Sebelum" 
-                                                         style="height: 20rem; object-fit: cover;">
+                                                        src="<?php echo $tugas_images_sebelum[$j]['filename'] ?>"
+                                                        alt="Image Sebelum" 
+                                                        style="height: 20rem; object-fit: cover;">
                                                     <?php 
                                                     break;
                                                 } 
                                             }
                                             if ($flag1 == 0) { ?>
                                                 <h4 class="card-title"> Sebelum | Belum difoto </h4>
-                                                <!-- <img class="card-img-bottom img-fluid" 
-                                                     src="../assets/static/images/csimage/noImage.jpg"
-                                                     alt="Image Sebelum" 
-                                                     style="height: 20rem; object-fit: cover;"> -->
-                                                
                                                 <form action="#" method="POST" enctype="multipart/form-data">
                                                     <fieldset>
+                                                        <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
                                                         <div class="input-group">
                                                             <input type="file" class="form-control" id="sebelumFoto" name="sebelumFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
                                                             <button class="btn btn-primary" type="submit" id="btnUploadSebelum" name="btnUploadSebelum">Upload Sebelum</button>
@@ -179,28 +224,31 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                                     <div class="card-body">
                                         <div class="card-content">
                                             <?php 
-                                            for ($j = 0; $j <= count($tugas)-1; $j++) {
-                                                if (isset($tugas_images_sesudah[$j][0]) && $tugas_images_sesudah[$j][0] == $tugas[$i][0]){ 
+                                            for ($j = 0; $j <= count($tugas_images_sesudah)-1; $j++) {
+                                                if (isset($tugas_images_sesudah[$j]['tugas_id']) && $tugas_images_sesudah[$j]['tugas_id'] == $tugas[$i]['id']){ 
                                                     $flag2 = 1; ?>
-                                                    <h4 class="card-title">Sesudah | Difoto : <?php echo $tugas_images_sesudah[$j][2] ?></h4>
+                                                    <h4 class="card-title">Sesudah | Difoto : <?php echo $tugas_images_sesudah[$j]['created_at'] ?></h4>
                                                     <img class="card-img-bottom img-fluid" 
-                                                         src="<?php echo "../" . $tugas_images_sesudah[$j][1] ?>"
-                                                         alt="Image Sesudah" 
-                                                         style="height: 20rem; object-fit: cover;">
+                                                        src="<?php echo $tugas_images_sesudah[$j]['filename'] ?>"
+                                                        alt="Image Sesudah" 
+                                                        style="height: 20rem; object-fit: cover;">
                                                     <?php 
                                                     break;
                                                 } 
                                             }
                                             if ($flag2 == 0) { ?>
                                                 <h4 class="card-title"> Sesudah | Belum difoto </h4>
-                                                <img class="card-img-bottom img-fluid" 
-                                                     src="../assets/static/images/csimage/noImage.jpg"
-                                                     alt="Image Sesudah" 
-                                                     style="height: 20rem; object-fit: cover;">
-                                                <?php 
-                                                // continue;
-                                            } 
-                                            ?>
+                                                <form action="#" method="POST" enctype="multipart/form-data">
+                                                    <fieldset>
+                                                        <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
+                                                        <div class="input-group">
+                                                            <input type="file" class="form-control" id="sesudahFoto" name="sesudahFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
+                                                            <button class="btn btn-primary" type="submit" id="btnUploadSesudah" name="btnUploadSesudah">Upload Sebelum</button>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                                <?php
+                                            } ?>
                                             <p class="card-text">
                                             </p>
                                         </div>

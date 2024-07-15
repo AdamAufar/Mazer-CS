@@ -1,4 +1,6 @@
-<?php 
+<?php
+// Start output buffering
+ob_start();
 
 include_once "header-main.php";
 
@@ -17,7 +19,7 @@ if (isset($_POST['btnUpload'])) {
         echo 'ERORROOROR';
 
     // Copy to uploads folder
-    $target_dir = '../uploads/';
+    $target_dir = '../uploads/absensi/';
     $target_file = $target_dir . basename($file['name']);
     $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
     $filename = $target_dir . uniqid() . ".". $file_ext;
@@ -26,6 +28,10 @@ if (isset($_POST['btnUpload'])) {
     // INSERT absensi photo into database
     $sql = "INSERT INTO `absensi`(`user_id`, `filename`) VALUES ('$id','$filename')";
     $insert_result = mysqli_query($conn, $sql);
+
+    // Redirect to the same page to prevent form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 } else {
     $_SESSION['error_message'] = "No photo data received!";
 }
@@ -158,19 +164,20 @@ $_SESSION['all_absen'] = mysqli_fetch_all($all_absen);
                                                                             }
                                                                         echo '</td>';
                                                                         echo '<td>' . $i->format("d-m-Y") . '</td>';
-
-                                                                        if (date('w', strtotime($i->format("Y-m-d"))) == '6' || date('w', strtotime($i->format("Y-m-d"))) == '0') {
-                                                                            echo '<td>LIBUR</td>';
-                                                                            if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
-                                                                                $j++;
-                                                                            }
-                                                                        } else if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
+                                                                        
+                                                                        if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
                                                                             if ($all_absen[$j][2] > '08:00:00') {
                                                                                 echo '<td><span style="color: red;">' . $all_absen[$j][2] . '</span></td>';
                                                                             } else {
                                                                                 echo '<td>' . $all_absen[$j][2] . '</td>';
                                                                             }
                                                                             $j++;
+                                                                        // IF sat or sun then print LIBUR
+                                                                        } else if (date('w', strtotime($i->format("Y-m-d"))) == '6' || date('w', strtotime($i->format("Y-m-d"))) == '0') {
+                                                                            echo '<td>LIBUR</td>';
+                                                                            if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
+                                                                                $j++;
+                                                                            }
                                                                         } else {
                                                                             echo '<td>-</td>';
                                                                         }
@@ -232,4 +239,9 @@ $_SESSION['all_absen'] = mysqli_fetch_all($all_absen);
     </div>
 </div>
 
-<?php include_once "footer-main.php"; ?>
+<?php 
+include_once "footer-main.php"; 
+
+// Flush the output buffer
+ob_end_flush();
+?>
