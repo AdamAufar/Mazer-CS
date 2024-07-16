@@ -64,44 +64,5 @@ session_start();
             </div>
         </div>
     </div>
-    <div class="sidebar-menu">
-        <ul class="menu">
-            <li class="sidebar-title">Menu</li>
-            
-            <li
-                class="sidebar-item ">
-                <a href="absensi.php" class='sidebar-link'>
-                    <i class="bi bi-clock"></i>
-                    <span>Absensi</span>
-                </a>
-            </li>
-            
-            <li
-                class="sidebar-item ">
-                <a href="tugas-harian.php" class='sidebar-link'>
-                    <i class="bi bi-camera"></i>
-                    <span>Tugas Harian</span>
-                </a>
-            </li>
-
-            <li
-                class="sidebar-item ">
-                <a href="index.html" class='sidebar-link'>
-                    <i class="bi bi-list-task"></i>
-                    <span>Lihat Komplain</span>
-                </a>
-            </li>
-            
-            <li
-                class="sidebar-item ">
-                <a href="../includes/logout.php" class='sidebar-link'>
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>Logout</span>
-                </a>
-            </li>
-
-            
-        </ul>
-    </div>
 </div>
 </div>

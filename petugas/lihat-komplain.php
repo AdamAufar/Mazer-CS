@@ -28,10 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
 
         if (move_uploaded_file($file['tmp_name'], $filename)) {
             // Get tugas_id from POST data
+            echo $_POST['komplain_id'];
             $komplain_id = $_POST['komplain_id'];
 
             // INSERT absensi photo into database
             $sql = "UPDATE komplain SET followup = '$filename', status = 0 WHERE id = $komplain_id";
+            echo $sql;
             if (mysqli_query($conn, $sql)) {
                 // Redirect to avoid form resubmission
                 header("Location: " . $_SERVER['PHP_SELF']);
@@ -60,7 +62,7 @@ $sql = "SELECT k.tugas_id, th.details, k.nama,
                 WHEN k.status = 1 THEN 'Kurang Bersih'
                 WHEN k.status = 2 THEN 'Kotor'
                 END as statusBersih,
-            k.catatan, k.filename, k.followup, date_format(created_at, '%H:%i') as 'created_at', k.id
+            k.catatan, k.filename, k.followup, date_format(created_at, '%H:%i') as 'created_at', k.id, date_format(created_at, '%W, %d %M %Y') as 'date_komplain'
         FROM komplain k 
             JOIN tugas_harian th ON k.tugas_id = th.id
         WHERE th.lokasi = '$lokasi'
@@ -129,12 +131,13 @@ $allKomplain =  mysqli_fetch_all($result1);
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card-content">
-                                            <h4 class="card-title">Komplain | Difoto : <?php echo $allKomplain[$i][7] ?></h4>
+                                            <h4 class="card-title">Komplain</h4>
                                             <img class="card-img-bottom img-fluid" 
                                                 src="<?php echo $allKomplain[$i][5] ?>"
                                                 alt="Image Komplain" 
                                                 style="height: 20rem; object-fit: cover;">
                                             <p class="card-text">
+                                                <h4> <?php echo $allKomplain[$i][7] . " " . $allKomplain[$i][9] ?> </h4>
                                             </p>
                                         </div>
                                     </div>
@@ -147,18 +150,19 @@ $allKomplain =  mysqli_fetch_all($result1);
                                         <div class="card-content"> <?php 
                                         if ($allKomplain[$i][6] != "-") {
                                         ?>
-                                            <h4 class="card-title">Followup | Difoto : <?php echo $allKomplain[$i][7] ?></h4>
+                                            <h4 class="card-title">Followup</h4>
                                             <img class="card-img-bottom img-fluid" 
                                                 src="<?php echo $allKomplain[$i][6] ?>"
                                                 alt="Image Sesudah" 
                                                 style="height: 20rem; object-fit: cover;">
                                             <p class="card-text">
+                                                <h4> <?php echo $allKomplain[$i][7] . " " . $allKomplain[$i][9] ?> </h4>
                                             </p> <?php
                                         } else { ?>
-                                            <h4 class="card-title"> Sesudah | Belum difoto </h4>
+                                            <h4 class="card-title"> Followup | Belum difoto </h4>
                                             <form action="#" method="POST" enctype="multipart/form-data">
                                                 <fieldset>
-                                                    <input type="hidden" name="komplain_id" value="<?php echo $allKomplain[$i][0]; ?>">
+                                                    <input type="hidden" name="komplain_id" value="<?php echo $allKomplain[$i][8]; ?>">
                                                     <div class="input-group">
                                                         <input type="file" class="form-control" id="sesudahFoto" name="sesudahFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
                                                         <button class="btn btn-primary" type="submit" id="btnUploadSesudah" name="btnUploadSesudah">Upload Sebelum</button>
