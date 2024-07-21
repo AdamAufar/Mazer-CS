@@ -97,34 +97,6 @@ $result1 = mysqli_query($conn, $sql);
 $tugas = mysqli_fetch_all($result1, MYSQLI_ASSOC);
 if (!$result1) die('Error executing query: ' . mysqli_error($conn));
 
-// GET id tugas dari $lokasi
-$sql = "SELECT id
-        FROM tugas_harian 
-        WHERE lokasi='$lokasi'";
-$result2 = mysqli_query($conn, $sql);
-if (!$result2) die('Error executing query: ' . mysqli_error($conn));
-$all_tugas_id = array();
-while ($row = $result2->fetch_assoc()) {
-    array_push($all_tugas_id, $row['id']);
-}
-$string_version = implode(',', $all_tugas_id);
-
-// GET image tugas harian sebelum yg sudah di upload
-$sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
-        FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 0";
-$result3 = mysqli_query($conn, $sql);
-if (!$result3) die('Error executing query: ' . mysqli_error($conn));
-$tugas_images_sebelum = mysqli_fetch_all($result3, MYSQLI_ASSOC);
-
-// GET image tugas harian sesudah yg sudah di upload
-$sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
-        FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 1";
-$result4 = mysqli_query($conn, $sql);
-if (!$result4) die('Error executing query: ' . mysqli_error($conn));
-$tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
-
 ?>
 
 <div id="main">
@@ -172,90 +144,13 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                     $flag1 = 0; 
                     $flag2 = 0;
                     $skipSesudah = 0;
-                    for ($i = 0; $i <= count($tugas)-1; $i++) { 
-                        if ($tugas[$i]['status'] == 0) continue; ?>
+                    for ($i = 0; $i <= count($tugas)-1; $i++) { ?>
                         <h4 class="card-title">
                             <?php echo ($i+1) . ". " . $tugas[$i]['details'] ?>
                         </h4>
-                        <br>
-                        <div class="row">
-                            <!-- Sebelum BLOCK -->
-                            <div class="col-md-6 col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="card-content">
-                                            <?php 
-                                            for ($j = 0; $j <= count($tugas_images_sebelum)-1; $j++) {
-                                                if (isset($tugas_images_sebelum[$j]['tugas_id']) && $tugas_images_sebelum[$j]['tugas_id'] == $tugas[$i]['id']){ 
-                                                    $flag1 = 1; ?>
-                                                    <h4 class="card-title">Sebelum | Difoto : <?php echo $tugas_images_sebelum[$j]['created_at'] ?></h4>
-                                                    <img class="card-img-bottom img-fluid" 
-                                                        src="<?php echo $tugas_images_sebelum[$j]['filename'] ?>"
-                                                        alt="Image Sebelum" 
-                                                        style="height: 20rem; object-fit: cover;">
-                                                    <?php 
-                                                    break;
-                                                } 
-                                            }
-                                            if ($flag1 == 0) { ?>
-                                                <h4 class="card-title"> Sebelum | Belum difoto </h4>
-                                                <form action="#" method="POST" enctype="multipart/form-data">
-                                                    <fieldset>
-                                                        <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
-                                                        <div class="input-group">
-                                                            <input type="file" class="form-control" id="sebelumFoto" name="sebelumFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
-                                                            <button class="btn btn-primary" type="submit" id="btnUploadSebelum" name="btnUploadSebelum">Upload Sebelum</button>
-                                                        </div>
-                                                    </fieldset>
-                                                </form>
-                                                <?php 
-                                                $skipSesudah = 1;
-                                            } ?>
-                                            <p class="card-text">
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Sesudah BLOCK -->
-                            <?php if ($skipSesudah == 0) { ?>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="card-content">
-                                            <?php 
-                                            for ($j = 0; $j <= count($tugas_images_sesudah)-1; $j++) {
-                                                if (isset($tugas_images_sesudah[$j]['tugas_id']) && $tugas_images_sesudah[$j]['tugas_id'] == $tugas[$i]['id']){ 
-                                                    $flag2 = 1; ?>
-                                                    <h4 class="card-title">Sesudah | Difoto : <?php echo $tugas_images_sesudah[$j]['created_at'] ?></h4>
-                                                    <img class="card-img-bottom img-fluid" 
-                                                        src="<?php echo $tugas_images_sesudah[$j]['filename'] ?>"
-                                                        alt="Image Sesudah" 
-                                                        style="height: 20rem; object-fit: cover;">
-                                                    <?php 
-                                                    break;
-                                                } 
-                                            }
-                                            if ($flag2 == 0) { ?>
-                                                <h4 class="card-title"> Sesudah | Belum difoto </h4>
-                                                <form action="#" method="POST" enctype="multipart/form-data">
-                                                    <fieldset>
-                                                        <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
-                                                        <div class="input-group">
-                                                            <input type="file" class="form-control" id="sesudahFoto" name="sesudahFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
-                                                            <button class="btn btn-primary" type="submit" id="btnUploadSesudah" name="btnUploadSesudah">Upload Sebelum</button>
-                                                        </div>
-                                                    </fieldset>
-                                                </form>
-                                                <?php
-                                            } ?>
-                                            <p class="card-text">
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php } ?>
+                        
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="tugasSwitch" <?php if ($tugas[$i]['status'] == 1){echo "checked";} else {echo "";} ?> >
                         </div>
                         <hr>
                     <?php 

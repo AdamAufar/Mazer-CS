@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2024 at 05:25 PM
+-- Generation Time: Jul 21, 2024 at 07:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,8 @@ CREATE TABLE `absensi` (
 --
 
 INSERT INTO `absensi` (`id`, `user_id`, `filename`, `absen_at`) VALUES
-(36, 1, '../uploads/absensi/6695e193af295.jpg', '2024-07-16 09:57:23');
+(36, 1, '../uploads/absensi/6695e193af295.jpg', '2024-07-16 09:57:23'),
+(37, 1, '../uploads/absensi/669d3612da262.jpg', '2024-07-21 23:23:46');
 
 -- --------------------------------------------------------
 
@@ -107,23 +108,24 @@ INSERT INTO `komplain` (`id`, `nama`, `tugas_id`, `filename`, `followup`, `statu
 CREATE TABLE `tugas_harian` (
   `id` int(11) NOT NULL,
   `lokasi` varchar(100) DEFAULT NULL,
-  `details` text DEFAULT NULL
+  `details` text DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = not active\r\n1 = active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tugas_harian`
 --
 
-INSERT INTO `tugas_harian` (`id`, `lokasi`, `details`) VALUES
-(1, 'Melawai 10 Lt.3', 'Lantai sudah di pel dengan bersih'),
-(2, 'Melawai 10 Lt.3', 'Semua Air Minum karyawan sudah terisi'),
-(3, 'Melawai 10 Lt.3', 'Jendela sudah di lap'),
-(4, 'Melawai 10 Lt.3', 'Semua tempat sampah dibuang'),
-(5, 'Melawai 10 Lt.2', 'Pel Lantai'),
-(6, 'Melawai 10 Lt.2', 'Isi dispenser'),
-(7, 'Melawai 10 Lt.2', 'Sapu lantai'),
-(8, 'Melawai 10 Lt.2', 'Lap jendela'),
-(9, 'Melawai 10 Lt.3', 'Bersihin meja');
+INSERT INTO `tugas_harian` (`id`, `lokasi`, `details`, `status`) VALUES
+(1, 'Melawai 10 Lt.3', 'Lantai sudah di pel dengan bersih', 1),
+(2, 'Melawai 10 Lt.3', 'Semua Air Minum karyawan sudah terisi', 1),
+(3, 'Melawai 10 Lt.3', 'Jendela sudah di lap', 1),
+(4, 'Melawai 10 Lt.3', 'Semua tempat sampah dibuang', 0),
+(5, 'Melawai 10 Lt.2', 'Pel Lantai', 1),
+(6, 'Melawai 10 Lt.2', 'Isi dispenser', 1),
+(7, 'Melawai 10 Lt.2', 'Sapu lantai', 1),
+(8, 'Melawai 10 Lt.2', 'Lap jendela', 1),
+(9, 'Melawai 10 Lt.3', 'Bersihin meja', 1);
 
 -- --------------------------------------------------------
 
@@ -195,7 +197,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `image_tugas_harian`
