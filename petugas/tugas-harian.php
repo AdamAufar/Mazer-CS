@@ -7,7 +7,6 @@ if (!isset($_SESSION['id']) || $_SESSION['id'] == "") {
     exit(); // Always use exit() after header redirect
 }
 
-
 // Date Datas
 $currentDate = date('Y-m-d', time());
 $startDate = date(date('Y', time()) . '-' . date('m', time()) . '-01');
@@ -30,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSebelum'])) {
             // Get tugas_id from POST data
             $tugas_id = $_POST['tugas_id'];
 
-            // INSERT absensi photo into database
-            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`) 
-                    VALUES ('$tugas_id', '$filename', 0)";
+            // INSERT absensi photo into database with submitted_by
+            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`, `submitted_by`) 
+                    VALUES ('$tugas_id', '$filename', 0, '$id')";
             if (mysqli_query($conn, $sql)) {
                 // Redirect to avoid form resubmission
                 header("Location: " . $_SERVER['PHP_SELF']);
@@ -46,11 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSebelum'])) {
     } else {
         echo 'Error: No file uploaded<br>';
     }
-}
- else {
+} else {
     $_SESSION['error_message'] = "No photo data received!";
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
     unset($_POST['btnUploadSesudah']);
@@ -67,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
             // Get tugas_id from POST data
             $tugas_id = $_POST['tugas_id'];
 
-            // INSERT absensi photo into database
-            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`) 
-                    VALUES ('$tugas_id', '$filename', 1)";
+            // INSERT absensi photo into database with submitted_by
+            $sql = "INSERT INTO `image_tugas_harian`(`tugas_id`, `filename`, `status`, `submitted_by`) 
+                    VALUES ('$tugas_id', '$filename', 1, '$id')";
             if (mysqli_query($conn, $sql)) {
                 // Redirect to avoid form resubmission
                 header("Location: " . $_SERVER['PHP_SELF']);
@@ -83,8 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
     } else {
         echo 'Error: No file uploaded<br>';
     }
-}
- else {
+} else {
     $_SESSION['error_message'] = "No photo data received!";
 }
 
@@ -112,7 +108,7 @@ $string_version = implode(',', $all_tugas_id);
 // GET image tugas harian sebelum yg sudah di upload
 $sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
         FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 0";
+        WHERE tugas_id IN ($string_version) AND status = 0  AND date_format(created_at, '%Y-%m-%d') = '$currentDate'";
 $result3 = mysqli_query($conn, $sql);
 if (!$result3) die('Error executing query: ' . mysqli_error($conn));
 $tugas_images_sebelum = mysqli_fetch_all($result3, MYSQLI_ASSOC);
@@ -120,7 +116,7 @@ $tugas_images_sebelum = mysqli_fetch_all($result3, MYSQLI_ASSOC);
 // GET image tugas harian sesudah yg sudah di upload
 $sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
         FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 1";
+        WHERE tugas_id IN ($string_version) AND status = 1  AND date_format(created_at, '%Y-%m-%d') = '$currentDate'";
 $result4 = mysqli_query($conn, $sql);
 if (!$result4) die('Error executing query: ' . mysqli_error($conn));
 $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
@@ -243,7 +239,7 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                                                         <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
                                                         <div class="input-group">
                                                             <input type="file" class="form-control" id="sesudahFoto" name="sesudahFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
-                                                            <button class="btn btn-primary" type="submit" id="btnUploadSesudah" name="btnUploadSesudah">Upload Sebelum</button>
+                                                            <button class="btn btn-primary" type="submit" id="btnUploadSesudah" name="btnUploadSesudah">Upload Sesudah</button>
                                                         </div>
                                                     </fieldset>
                                                 </form>
