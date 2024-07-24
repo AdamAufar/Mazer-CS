@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2024 at 07:49 PM
+-- Generation Time: Jul 24, 2024 at 08:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -53,21 +53,23 @@ CREATE TABLE `image_tugas_harian` (
   `tugas_id` int(11) DEFAULT NULL,
   `filename` varchar(100) DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL COMMENT '0 = sebelum,\r\n1 = sesudah,\r\n2 = komplain',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `submitted_by` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `image_tugas_harian`
 --
 
-INSERT INTO `image_tugas_harian` (`id`, `tugas_id`, `filename`, `status`, `created_at`) VALUES
-(1, 1, '../uploads/tugasHarian/6667ca6428303.png', 0, '2024-06-11 10:54:12'),
-(2, 3, '../uploads/tugasHarian/6667ca7278a2d.png', 0, '2024-06-11 10:54:26'),
-(3, 3, '../uploads/tugasHarian/6667ca8e7ab17.png', 1, '2024-06-11 10:54:54'),
-(5, 1, '../uploads/tugasHarian/666a9bf9076c2.png', 1, '2024-06-13 14:12:57'),
-(6, 2, '../uploads/tugasHarian/666bf4deb3c35.png', 0, '2024-06-14 14:44:30'),
-(8, 4, '../uploads/tugasHarian/6695330b3f19b.jpg', 0, '2024-07-15 21:32:43'),
-(9, 4, '../uploads/tugasHarian/669539bc9ed9d.jpg', 1, '2024-07-15 22:01:16');
+INSERT INTO `image_tugas_harian` (`id`, `tugas_id`, `filename`, `status`, `created_at`, `submitted_by`) VALUES
+(1, 1, '../uploads/tugasHarian/6667ca6428303.png', 0, '2024-06-11 10:54:12', 0),
+(2, 3, '../uploads/tugasHarian/6667ca7278a2d.png', 0, '2024-06-11 10:54:26', 0),
+(3, 3, '../uploads/tugasHarian/6667ca8e7ab17.png', 1, '2024-06-11 10:54:54', 0),
+(5, 1, '../uploads/tugasHarian/666a9bf9076c2.png', 1, '2024-06-13 14:12:57', 0),
+(6, 2, '../uploads/tugasHarian/666bf4deb3c35.png', 0, '2024-06-14 14:44:30', 0),
+(8, 4, '../uploads/tugasHarian/6695330b3f19b.jpg', 0, '2024-07-15 21:32:43', 0),
+(9, 4, '../uploads/tugasHarian/669539bc9ed9d.jpg', 1, '2024-07-15 22:01:16', 0),
+(10, 1, '../uploads/tugasHarian/66a144698873f.jpg', 0, '2024-07-25 01:14:01', 3);
 
 -- --------------------------------------------------------
 
@@ -125,7 +127,8 @@ INSERT INTO `tugas_harian` (`id`, `lokasi`, `details`, `status`) VALUES
 (6, 'Melawai 10 Lt.2', 'Isi dispenser', 1),
 (7, 'Melawai 10 Lt.2', 'Sapu lantai', 1),
 (8, 'Melawai 10 Lt.2', 'Lap jendela', 1),
-(9, 'Melawai 10 Lt.3', 'Bersihin meja', 1);
+(9, 'Melawai 10 Lt.3', 'Bersihin meja', 1),
+(10, 'Melawai 10 Lt.3', 'asdasdasdasd', 0);
 
 -- --------------------------------------------------------
 
@@ -148,8 +151,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nik`, `jabatan`, `status`) VALUES
-(1, 'petugas1', 'pass1', 'Petugas', '123456489', 'Cleaning Service', 1),
-(2, 'petugas2', 'pass2', 'Petugas Dua', '23465789', 'Cleaning Service', 1);
+(1, 'petugas1', 'pass1', 'Petugas', '123456489', 'Cleaning Service', 0),
+(2, 'petugas2', 'pass2', 'Petugas Dua', '23465789', 'Cleaning Service', 1),
+(3, 'admin1', 'admin1', 'Admin Satu', '98767123', 'Admin', 1);
 
 --
 -- Indexes for dumped tables
@@ -203,7 +207,7 @@ ALTER TABLE `absensi`
 -- AUTO_INCREMENT for table `image_tugas_harian`
 --
 ALTER TABLE `image_tugas_harian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `komplain`
@@ -215,13 +219,13 @@ ALTER TABLE `komplain`
 -- AUTO_INCREMENT for table `tugas_harian`
 --
 ALTER TABLE `tugas_harian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
