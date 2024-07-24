@@ -19,6 +19,7 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
   <link rel="stylesheet" crossorigin href="../assets/compiled/css/app.css">
   <link rel="stylesheet" crossorigin href="../assets/compiled/css/app-dark.css">
   <link rel="stylesheet" crossorigin href="../assets/compiled/css/iconly.css">
+  <link rel="stylesheet" href="../assets/extensions/choices.js/public/assets/styles/choices.css">
 </head>
 
 <body>

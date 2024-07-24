@@ -7,12 +7,22 @@ if (!isset($_SESSION['id']) || $_SESSION['id'] == "") {
     exit(); // Always use exit() after header redirect
 }
 
+$id = $_SESSION['id'];
+
+$sql = "SELECT jabatan
+        FROM users 
+        WHERE id='$id'";
+$resultjabatan = mysqli_query($conn, $sql);
+$jabatan = mysqli_fetch_assoc($resultjabatan);
+if ($jabatan['jabatan'] != "Admin") {
+    header("Location: tugas-harian.php");
+}
+
 // Date Datas
 $currentDate = date('Y-m-d', time());
 $startDate = date(date('Y', time()) . '-' . date('m', time()) . '-01');
 $lastDate = date("Y-m-t", strtotime($currentDate));
 
-$id = $_SESSION['id'];
 
 // GET list tugas harian untuk $lokasi
 $lokasi = $_SESSION['lokasi'];
@@ -78,6 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['switchStates'])) {
                             </div>
                         </div>
                     </div>
+                    
+                    <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal" data-bs-target="#modalabsen">
+                        <i class="bi bi-pencil-square"></i> 
+                        Tambah Tugas
+                    </button>
+                    <hr>
 
                     <!-- Form Start -->
                     <form id="tugasForm" method="POST" action="#">
@@ -104,6 +120,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['switchStates'])) {
         </div>
     </section>
 </div>
+
+<!--Basic Modal -->
+<div class="modal fade text-left" id="modalabsen" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel1" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel1">Basic Modal</h5>
+                <button type="button" class="close rounded-pill" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-1">
+                        
+                    <div class="form-group">
+                            <label for="basicInput">Basic Input</label>
+                            <input type="text" class="form-control" id="basicInput" placeholder="Enter email">
+                        </div>
+                        <h6>Lokasi:</h6>
+                        <fieldset class="form-group">
+                            <select class="form-select" id="basicSelect">
+                                <option>IT</option>
+                                <option>Blade Runner</option>
+                                <option>Thor Ragnarok</option>
+                            </select>
+                        </fieldset>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-bs-dismiss="modal">
+                    <span class="d-sm-block">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <?php include_once "footer-main.php"; ?>
 
