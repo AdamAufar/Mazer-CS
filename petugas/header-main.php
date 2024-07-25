@@ -104,7 +104,7 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
             <li
                 class="sidebar-item ">
                 <a href="tugas-toggle.php" class='sidebar-link'>
-                    <i class="bi bi-camera"></i>
+                    <i class="bi bi-clipboard-check"></i>
                     <span>Tugas Toggle</span>
                 </a>
             </li>
