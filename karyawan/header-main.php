@@ -2,7 +2,7 @@
 require_once '../includes/connection.php';
 session_start();
 // if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "") 
-//     header('Location: ../auth-login.php');
+//     header('Location: ../index.php');
 
 
 ?>
@@ -70,7 +70,7 @@ session_start();
             
             <li
                 class="sidebar-item ">
-                <a href="../auth-login.php" class='sidebar-link'>
+                <a href="../index.php" class='sidebar-link'>
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Login Petugas</span>
                 </a>

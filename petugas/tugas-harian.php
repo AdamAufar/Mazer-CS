@@ -3,7 +3,7 @@ ob_start();
 include_once "header-main.php";
 
 if (!isset($_SESSION['id']) || $_SESSION['id'] == "") {
-    header('Location: ../auth-login.php');
+    header('Location: ../index.php');
     exit(); // Always use exit() after header redirect
 }
 

@@ -9,6 +9,6 @@ $logout_q = mysqli_query($conn, $sql);
 $lokasi = $_SESSION['lokasi'];
 session_unset();
 session_destroy();
-header("Location: ../auth-login.php?lokasi=$lokasi");
+header("Location: ../index.php?lokasi=$lokasi");
 exit;
 ?>

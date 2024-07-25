@@ -215,9 +215,6 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                 <button type="button" class="btn" data-bs-dismiss="modal">
                     <span class="d-sm-block">Close</span>
                 </button>
-                <button type="button" class="btn btn-primary ms-1" data-bs-dismiss="modal">
-                    <span class="d-sm-block">Accept</span>
-                </button>
             </div>
         </div>
     </div>

@@ -67,7 +67,8 @@ if(isset($_POST['submit'])){
                     </div> -->
                     <h1 class="auth-title">Log in.</h1>
                     <p class="auth-subtitle mb-5">Selamat Datang Di Aplikasi Cleaning Service.</p>
-                    <p class="text-center mt-5 text-lg fs-4">Lokasi: <?php echo $_SESSION['lokasi'] ?></p>
+                    <p class="text-center mt-5 text-lg fs-4">Lokasi: <?php if (empty($_SESSION['lokasi'])) echo 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan'; else echo $_SESSION['lokasi'] ?></p>
+                    
 
                     <form action="#" method="POST"> 
                         <?php 

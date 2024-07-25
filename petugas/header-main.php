@@ -2,7 +2,7 @@
 require_once '../includes/connection.php';
 session_start();
 if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "") 
-    header('Location: ../auth-login.php');
+    header('Location: ../index.php');
 
     $id = $_SESSION['id'];
 $sql = "SELECT jabatan FROM users WHERE id='$id'";
