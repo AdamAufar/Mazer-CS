@@ -4,6 +4,11 @@ session_start();
 if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "") 
     header('Location: ../auth-login.php');
 
+    $id = $_SESSION['id'];
+$sql = "SELECT jabatan FROM users WHERE id='$id'";
+$resultjabatan = mysqli_query($conn, $sql);
+$jabatan = mysqli_fetch_assoc($resultjabatan);
+// print_r($jabatan);
 
 ?>
 
@@ -101,6 +106,7 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
                 </a>
             </li>
 
+            <?php if ($jabatan['jabatan'] == "Admin") { ?>
             <li
                 class="sidebar-item ">
                 <a href="tugas-toggle.php" class='sidebar-link'>
@@ -108,6 +114,7 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
                     <span>Tugas Toggle</span>
                 </a>
             </li>
+            <?php } ?>
 
             
         </ul>
