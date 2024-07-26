@@ -10,7 +10,6 @@ $startDate = date(date('Y', time()) . '-' . date('m', time()) . '-01');
 $lastDate = date("Y-m-t", strtotime($currentDate));
 
 $id = $_SESSION['id'];
-// print_r($_POST['btnUpload']);
 if (isset($_POST['btnUpload'])) {
     unset($_POST['btnUpload']);
     if (isset($_FILES['absenFoto'])) 
@@ -89,7 +88,7 @@ $_SESSION['all_absen'] = mysqli_fetch_all($all_absen);
                                     <div class="comment-body">
                                         <div class="comment-profileName"> <?php echo $_SESSION['nama'] . " (" . $_SESSION['nik'] . ")"; ?> </div>
                                         <div class="comment-message">
-                                            <p class="list-group-item-text truncate mb-20"> <?php echo $_SESSION['lokasi']; ?>  </p>
+                                            <p class="list-group-item-text truncate mb-20"> <?php echo $lokasiName['lokasi']; ?>  </p>
                                         </div>
                                         <div class="comment-actions">
                                             <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"

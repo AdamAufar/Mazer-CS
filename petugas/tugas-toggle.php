@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="comment-body">
                                         <div class="comment-profileName"> <?php echo $_SESSION['nama'] . " (" . $_SESSION['nik'] . ")"; ?> </div>
                                         <div class="comment-message">
-                                            <p class="list-group-item-text truncate mb-20"> <?php echo $_SESSION['lokasi']; ?>  </p>
+                                            <p class="list-group-item-text truncate mb-20"> <?php echo $lokasiName['lokasi']; ?>  </p>
                                         </div>
                                     </div>
                                 </div>

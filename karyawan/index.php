@@ -164,11 +164,11 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                                     </div>
                                 </div>
                             </div>
-                            <?php } ?>
                             <div class="col-md-6 col-sm-6">
                                 <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"
                                                 data-bs-target="#modalabsen"><i class="bi bi-pencil-square"></i> Absen</button>
                             </div>
+                            <?php } ?>
                         </div>
                         <hr>
                     <?php 

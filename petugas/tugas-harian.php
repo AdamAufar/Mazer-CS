@@ -85,10 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
 }
 
 // GET list tugas harian untuk $lokasi
-$lokasi = $_SESSION['lokasi'];
+$lokasiId = $_SESSION['lokasi'];
 $sql = "SELECT id, details, status
         FROM tugas_harian 
-        WHERE lokasi='$lokasi'";
+        WHERE lokasi='$lokasiId'";
 $result1 = mysqli_query($conn, $sql);
 $tugas = mysqli_fetch_all($result1, MYSQLI_ASSOC);
 if (!$result1) die('Error executing query: ' . mysqli_error($conn));
@@ -96,13 +96,12 @@ if (!$result1) die('Error executing query: ' . mysqli_error($conn));
 // GET id tugas dari $lokasi
 $sql = "SELECT id
         FROM tugas_harian 
-        WHERE lokasi='$lokasi'";
+        WHERE lokasi='$lokasiId'";
 $result2 = mysqli_query($conn, $sql);
 if (!$result2) die('Error executing query: ' . mysqli_error($conn));
 $all_tugas_id = array();
-while ($row = $result2->fetch_assoc()) {
+while ($row = $result2->fetch_assoc())
     array_push($all_tugas_id, $row['id']);
-}
 $string_version = implode(',', $all_tugas_id);
 
 // GET image tugas harian sebelum yg sudah di upload
@@ -157,7 +156,7 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                                     <div class="comment-body">
                                         <div class="comment-profileName"> <?php echo $_SESSION['nama'] . " (" . $_SESSION['nik'] . ")"; ?> </div>
                                         <div class="comment-message">
-                                            <p class="list-group-item-text truncate mb-20"> <?php echo $_SESSION['lokasi']; ?>  </p>
+                                            <p class="list-group-item-text truncate mb-20"> <?php echo $lokasiName['lokasi']; ?>  </p>
                                         </div>
                                     </div>
                                 </div>

@@ -8,7 +8,14 @@ if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "")
 $sql = "SELECT jabatan FROM users WHERE id='$id'";
 $resultjabatan = mysqli_query($conn, $sql);
 $jabatan = mysqli_fetch_assoc($resultjabatan);
-// print_r($jabatan);
+
+$lokasi_id = $_SESSION['lokasi'];
+$sql = "SELECT lokasi FROM lokasi WHERE id='$lokasi_id'";
+$querylokasi = mysqli_query($conn, $sql);
+if (mysqli_num_rows($querylokasi) == 1)
+    $lokasiName = mysqli_fetch_assoc($querylokasi);
+else 
+    $lokasiName = 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan';
 
 ?>
 

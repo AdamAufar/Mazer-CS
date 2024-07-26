@@ -12,6 +12,14 @@ if (isset($_GET["lokasi"])) {
     $_SESSION['lokasi'] = $_GET["lokasi"]; 
 }
 
+$lokasi_id = $_SESSION['lokasi'];
+$sql = "SELECT lokasi FROM lokasi WHERE id='$lokasi_id'";
+$querylokasi = mysqli_query($conn, $sql);
+if (mysqli_num_rows($querylokasi) == 1)
+    $lokasi = mysqli_fetch_assoc($querylokasi);
+else 
+    $lokasi = 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan';
+
 if(isset($_POST['submit'])){
     if(!empty($_POST['username'] && !empty($_POST['password']))) {
         $username = $_POST['username'];
@@ -70,10 +78,7 @@ if(isset($_POST['submit'])){
                     </div> -->
                     <h1 class="auth-title">Log in.</h1>
                     <p class="auth-subtitle mb-5">Selamat Datang Di Aplikasi Cleaning Service.</p>
-                    <p class="text-center mt-5 text-lg fs-4">Lokasi: <?php 
-                    if (empty($_SESSION['lokasi'])) { 
-                        echo 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan';  
-                    } else echo $_SESSION['lokasi'] ?></p>
+                    <p class="text-center mt-5 text-lg fs-4">Lokasi: <?php echo $lokasi['lokasi']; ?></p>
                     
 
                     <form action="#" method="POST"> 
