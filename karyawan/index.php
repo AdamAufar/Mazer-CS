@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 include_once "header-main.php";
 
 // Date Datas
@@ -18,11 +17,24 @@ if (isset($_POST['btnUploadSebelum'])) {
     $target_file = $target_dir . basename($file['name']);
     $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
     $filename = $target_dir . uniqid() . ".". $file_ext;
-    // move_uploaded_file($file['tmp_name'], $filename);
+    move_uploaded_file($file['tmp_name'], $filename);
 
-    // INSERT absensi photo into database
-    $sql = "INSERT INTO `absensi`(`user_id`, `filename`) VALUES ('$id','$filename')";
+    // Get form data
+    $name = mysqli_real_escape_string($conn, $_POST['komplainName']);
+    $note = mysqli_real_escape_string($conn, $_POST['komplainNote']);
+    $status = mysqli_real_escape_string($conn, $_POST['status']);
+    $tugas_id = mysqli_real_escape_string($conn, $_POST['tugas_id']);
+
+    // INSERT komplain data into database
+    $sql = "INSERT INTO `komplain`(`nama`, `tugas_id`, `filename`, `status`, `catatan`)
+            VALUES ('$name','$tugas_id','$filename','$status','$note')";
     $insert_result = mysqli_query($conn, $sql);
+
+    if ($insert_result) {
+        echo "Komplain successfully submitted.";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
 } else {
     $_SESSION['error_message'] = "No photo data received!";
 }
@@ -165,8 +177,11 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"
-                                                data-bs-target="#modalabsen"><i class="bi bi-pencil-square"></i> Absen</button>
+                            <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"
+        data-bs-target="#modalabsen" data-bs-tugas-id="<?php echo $tugas[$i][0]; ?>">
+    <i class="bi bi-pencil-square"></i> Komplain 
+</button>
+
                             </div>
                             <?php } ?>
                         </div>
@@ -200,11 +215,36 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                     <div class="col-md-12 mb-1">
                         <form action="#" method="POST" enctype="multipart/form-data">
                             <fieldset>
-                                <input type="hidden" name="tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
-                                <div class="input-group">
-                                    <input type="file" class="form-control" id="sebelumFoto" name="sebelumFoto"  aria-label="Upload" accept='image/*' capture='camera' required>
-                                    <button class="btn btn-primary" type="submit" id="btnUploadSebelum" name="btnUploadSebelum">Upload Sebelum</button>
+                                <input type="hidden" name="tugas_id" id="modal_tugas_id" value="">
+                                <div class="mb-3">
+                                    <label for="komplainName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="komplainName" name="komplainName" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="komplainNote" class="form-label">Note</label>
+                                    <textarea class="form-control" id="komplainNote" name="komplainNote" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="status" id="bersih" value="0" required>
+                                            <label class="form-check-label" for="bersih">Bersih</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="status" id="kurang_bersih" value="1" required>
+                                            <label class="form-check-label" for="kurang_bersih">Kurang Bersih</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="status" id="kotor" value="2" required>
+                                            <label class="form-check-label" for="kotor">Kotor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="sebelumFoto" name="sebelumFoto" aria-label="Upload" accept='image/*' capture='camera' required>
+                                </div>
+                                <button class="btn btn-primary" type="submit" id="btnUploadSebelum" name="btnUploadSebelum">Submit Komplain</button>
                             </fieldset>
                         </form>
                     </div>
@@ -221,3 +261,15 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
 </div>
 
 <?php include_once "footer-main.php"; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var modalAbsen = document.getElementById('modalabsen');
+    modalAbsen.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var tugasId = button.getAttribute('data-bs-tugas-id');
+        var modalTugasIdInput = document.getElementById('modal_tugas_id');
+        modalTugasIdInput.value = tugasId;
+    });
+});
+</script>
