@@ -1,4 +1,6 @@
 <?php
+// Start output buffering
+ob_start();
 include_once "header-main.php";
 
 // Date Datas
@@ -13,7 +15,7 @@ if (isset($_POST['btnUploadSebelum'])) {
         echo 'ERORROOROR';
 
     // Copy to uploads folder
-    $target_dir = '../uploads/komplain';
+    $target_dir = '../uploads/komplain/';
     $target_file = $target_dir . basename($file['name']);
     $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
     $filename = $target_dir . uniqid() . ".". $file_ext;
@@ -30,9 +32,7 @@ if (isset($_POST['btnUploadSebelum'])) {
             VALUES ('$name','$tugas_id','$filename','$status','$note')";
     $insert_result = mysqli_query($conn, $sql);
 
-    if ($insert_result) {
-        echo "Komplain successfully submitted.";
-    } else {
+    if (!$insert_result) {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 } else {
@@ -176,13 +176,15 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6">
-                            <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"
-        data-bs-target="#modalabsen" data-bs-tugas-id="<?php echo $tugas[$i][0]; ?>">
-    <i class="bi bi-pencil-square"></i> Komplain 
-</button>
-
-                            </div>
+                            
+                                <?php if ($flag2 != 0) { ?>
+                                    <div class="col-md-6 col-sm-6">
+                                    <button class="btn icon icon-left btn-primary me-2 text-nowrap" data-bs-toggle="modal"
+                                            data-bs-target="#modalabsen" data-bs-tugas-id="<?php echo $tugas[$i][0]; ?>">
+                                        <i class="bi bi-pencil-square"></i> Komplain 
+                                    </button>
+                                </div>
+                                <?php } ?>
                             <?php } ?>
                         </div>
                         <hr>
@@ -273,3 +275,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+<?php 
+// Flush the output buffer
+ob_end_flush();
+?>
