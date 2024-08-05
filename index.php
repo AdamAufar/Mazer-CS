@@ -11,14 +11,17 @@ if (isset($_SESSION['id']) &&  $_SESSION['id'] != "")
 if (isset($_GET["lokasi"])) {
     $_SESSION['lokasi'] = $_GET["lokasi"]; 
 }
-
-$lokasi_id = $_SESSION['lokasi'];
+$disabled = 0;
+if (isset($_SESSION['lokasi'])) $lokasi_id = $_SESSION['lokasi'];
+else $lokasi_id = -1;
 $sql = "SELECT lokasi FROM lokasi WHERE id='$lokasi_id'";
 $querylokasi = mysqli_query($conn, $sql);
 if (mysqli_num_rows($querylokasi) == 1)
     $lokasi = mysqli_fetch_assoc($querylokasi)['lokasi'];
-else 
+else {
     $lokasi = 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan';
+    $disabled = 1;
+}
 
 if(isset($_POST['submit'])){
     if(!empty($_POST['username'] && !empty($_POST['password']))) {
@@ -88,24 +91,28 @@ if(isset($_POST['submit'])){
                         }
                         ?>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Username" name="username" id="username" required>
+                            <input type="text" class="form-control form-control-xl" placeholder="Username" name="username" id="username" required <?php if ($disabled == 1) echo "disabled" ?> >
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password" id="password" required>
+                            <input type="password" class="form-control form-control-xl" placeholder="Password" name="password" id="password" required <?php if ($disabled == 1) echo "disabled" ?>>
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5" name="submit" id="submit">Log in</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5" name="submit" id="submit" <?php if ($disabled == 1) echo "disabled" ?>>Log in</button>
                     </form>
-                    <div class="text-center mt-5 text-lg fs-4">
+                    <?php if ($disabled == 0) { ?>
+                    <div class="text-center mt-5 text-lg fs-4" >
                         <p class="text-gray-600">Saya Karyawan,  <a href="karyawan" class="font-bold"> Komplain Disini</a>.</p>
                     </div>
+                    
+                    <?php } ?>
                 </div>
             </div>
+            <?php $disabled = 0; ?>
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
 

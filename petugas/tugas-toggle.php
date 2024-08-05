@@ -28,7 +28,7 @@ $result1 = mysqli_query($conn, $sql);
 $tugas = mysqli_fetch_all($result1, MYSQLI_ASSOC);
 if (!$result1) die('Error executing query: ' . mysqli_error($conn));
 
-$sql = "SELECT DISTINCT lokasi FROM tugas_harian";
+$sql = "SELECT id, lokasi FROM lokasi";
 $q = mysqli_query($conn, $sql);
 $list_lokasi = mysqli_fetch_all($q, MYSQLI_ASSOC);
 
@@ -119,20 +119,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <!-- Form Start -->
                     <form id="tugasForm" method="POST" action="#">
-                        <?php
-                        for ($i = 0; $i <= count($tugas)-1; $i++) { ?>
+                        <?php for ($i = 0; $i <= count($tugas) - 1; $i++) { ?>
                             <h4 class="card-title">
-                                <?php echo ($i+1) . ". " . $tugas[$i]['details'] ?>
+                                <?php echo ($i + 1) . ". " . $tugas[$i]['details']; ?>
                             </h4>
                             
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="tugasSwitch<?php echo $i; ?>" name="tugasSwitch[<?php echo $tugas[$i]['id']; ?>]" value="1" <?php if ($tugas[$i]['status'] == 1){echo "checked";} ?> >
+                                <input class="form-check-input" type="checkbox" id="tugasSwitch<?php echo $i; ?>" name="tugasSwitch[<?php echo $tugas[$i]['id']; ?>]" value="1" <?php if ($tugas[$i]['status'] == 1) echo "checked"; ?> >
                             </div>
                             <!-- DELETE tugas -->
-                            <form method="POST" action="#">
-                                <input type="hidden" name="delete_tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
-                                <button type="submit" class="btn btn-danger mt-2">Delete</button>
-                            </form>
+                            <button type="button" class="btn btn-danger mt-2 delete-tugas" data-id="<?php echo $tugas[$i]['id']; ?>">Delete</button>
                             <hr>
                         <?php } ?>
                         <input type="hidden" name="switchStates" id="switchStates">
@@ -170,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <fieldset class="form-group">
                                 <select class="form-select" id="lokasi" name="lokasi" required>
                                     <?php foreach ($list_lokasi as $l) {
-                                    echo "<option> " . $l['lokasi'] . " </option>";
+                                        echo "<option value='" . $l['id'] . "'>" . $l['lokasi'] . "</option>";
                                     } ?>
                                 </select>
                             </fieldset>
@@ -197,5 +193,25 @@ document.getElementById('tugasForm').addEventListener('submit', function(event) 
         switchStates['<?php echo $task['id']; ?>'] = document.getElementById('tugasSwitch<?php echo $index; ?>').checked ? 1 : 0;
     <?php } ?>
     document.getElementById('switchStates').value = JSON.stringify(switchStates);
+});
+
+document.querySelectorAll('.delete-tugas').forEach(button => {
+    button.addEventListener('click', function() {
+        const tugasId = this.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this tugas?')) {
+            const formData = new FormData();
+            formData.append('delete_tugas_id', tugasId);
+
+            fetch('tugas-toggle.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
 });
 </script>
