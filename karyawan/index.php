@@ -13,7 +13,7 @@ if (isset($_POST['btnUploadSebelum'])) {
         echo 'ERORROOROR';
 
     // Copy to uploads folder
-    $target_dir = '../uploads/';
+    $target_dir = '../uploads/komplain';
     $target_file = $target_dir . basename($file['name']);
     $file_ext = pathinfo($target_file, PATHINFO_EXTENSION);
     $filename = $target_dir . uniqid() . ".". $file_ext;
@@ -90,7 +90,7 @@ $tugas_images_sesudah = mysqli_fetch_all($result4);
             
 <div class="page-heading">
     <h3>Submit Komplain</h3>
-    <h5> <?php echo "Lokasi: " .  $lokasi ?> </h5>
+    <h5> <?php echo "Lokasi: " .  $lokasiName['lokasi'] ?> </h5>
 </div> 
 <div class="page-content"> 
     <section class="row">

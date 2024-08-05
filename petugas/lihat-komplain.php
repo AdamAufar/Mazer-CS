@@ -136,9 +136,8 @@ $allKomplain =  mysqli_fetch_all($result1);
                                                 src="<?php echo $allKomplain[$i][5] ?>"
                                                 alt="Image Komplain" 
                                                 style="height: 20rem; object-fit: cover;">
-                                            <p class="card-text">
-                                                <h4> <?php echo $allKomplain[$i][7] . " " . $allKomplain[$i][9] ?> </h4>
-                                            </p>
+                                            <br> <br>
+                                            <h5 class="card-subtitle"><?php echo $allKomplain[$i][7] . " " . $allKomplain[$i][9] ?></h5>
                                         </div>
                                     </div>
                                 </div>

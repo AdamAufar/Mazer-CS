@@ -1,8 +1,14 @@
 <?php
 require_once '../includes/connection.php';
 session_start();
-// if (!isset($_SESSION['id']) &&  $_SESSION['id'] == "") 
-//     header('Location: ../index.php');
+
+$lokasi_id = $_SESSION['lokasi'];
+$sql = "SELECT lokasi FROM lokasi WHERE id='$lokasi_id'";
+$querylokasi = mysqli_query($conn, $sql);
+if (mysqli_num_rows($querylokasi) == 1)
+    $lokasiName = mysqli_fetch_assoc($querylokasi);
+else 
+    $lokasiName = 'Lokasi tidak ditemukan, Mohon Scan QR Code yang telah ditetapkan';
 
 
 ?>

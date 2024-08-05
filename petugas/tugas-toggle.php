@@ -55,6 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo 'Database insert failed: ' . mysqli_error($conn) . '<br>';
         }
+    } elseif (isset($_POST['delete_tugas_id'])) {
+        $delete_tugas_id = mysqli_real_escape_string($conn, $_POST['delete_tugas_id']);
+        $sql = "DELETE FROM tugas_harian WHERE id='$delete_tugas_id'";
+        if (mysqli_query($conn, $sql)) {
+            // Redirect to avoid form resubmission
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            echo 'Database delete failed: ' . mysqli_error($conn) . '<br>';
+        }
     }
 }
 ?>
@@ -118,10 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="tugasSwitch<?php echo $i; ?>" name="tugasSwitch[<?php echo $tugas[$i]['id']; ?>]" value="1" <?php if ($tugas[$i]['status'] == 1){echo "checked";} ?> >
                             </div>
+                            <!-- DELETE tugas -->
+                            <form method="POST" action="#">
+                                <input type="hidden" name="delete_tugas_id" value="<?php echo $tugas[$i]['id']; ?>">
+                                <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                            </form>
                             <hr>
                         <?php } ?>
-
-                        <!-- Hidden input to store the switch states array -->
                         <input type="hidden" name="switchStates" id="switchStates">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

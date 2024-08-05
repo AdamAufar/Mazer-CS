@@ -105,17 +105,17 @@ while ($row = $result2->fetch_assoc())
 $string_version = implode(',', $all_tugas_id);
 
 // GET image tugas harian sebelum yg sudah di upload
-$sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
-        FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 0  AND date_format(created_at, '%Y-%m-%d') = '$currentDate'";
+$sql = "SELECT ith.tugas_id, ith.filename, date_format(ith.created_at, '%H:%i') as 'created_at', u.nama 
+        FROM image_tugas_harian ith JOIN users u on ith.submitted_by = u.id
+        WHERE ith.tugas_id IN ($string_version) AND ith.status = 0  AND date_format(ith.created_at, '%Y-%m-%d') = '$currentDate'";
 $result3 = mysqli_query($conn, $sql);
 if (!$result3) die('Error executing query: ' . mysqli_error($conn));
 $tugas_images_sebelum = mysqli_fetch_all($result3, MYSQLI_ASSOC);
 
 // GET image tugas harian sesudah yg sudah di upload
-$sql = "SELECT tugas_id, filename, date_format(created_at, '%H:%i') as 'created_at'
-        FROM image_tugas_harian 
-        WHERE tugas_id IN ($string_version) AND status = 1  AND date_format(created_at, '%Y-%m-%d') = '$currentDate'";
+$sql = "SELECT ith.tugas_id, ith.filename, date_format(ith.created_at, '%H:%i') as 'created_at', u.nama 
+        FROM image_tugas_harian ith JOIN users u on ith.submitted_by = u.id
+        WHERE ith.tugas_id IN ($string_version) AND ith.status = 1  AND date_format(ith.created_at, '%Y-%m-%d') = '$currentDate'";
 $result4 = mysqli_query($conn, $sql);
 if (!$result4) die('Error executing query: ' . mysqli_error($conn));
 $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
@@ -167,10 +167,11 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                     $flag1 = 0; 
                     $flag2 = 0;
                     $skipSesudah = 0;
+                    $numbering = 1;
                     for ($i = 0; $i <= count($tugas)-1; $i++) { 
                         if ($tugas[$i]['status'] == 0) continue; ?>
                         <h4 class="card-title">
-                            <?php echo ($i+1) . ". " . $tugas[$i]['details'] ?>
+                            <?php echo $numbering . ". " . $tugas[$i]['details']; $numbering++; ?>
                         </h4>
                         <br>
                         <div class="row">
@@ -188,6 +189,8 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                                                         src="<?php echo $tugas_images_sebelum[$j]['filename'] ?>"
                                                         alt="Image Sebelum" 
                                                         style="height: 20rem; object-fit: cover;">
+                                                    <br> <br>
+                                                    <h5 class="card-subtitle">Difoto oleh : <?php echo $tugas_images_sebelum[$j]['nama'] ?></h5>
                                                     <?php 
                                                     break;
                                                 } 
@@ -227,6 +230,8 @@ $tugas_images_sesudah = mysqli_fetch_all($result4, MYSQLI_ASSOC);
                                                         src="<?php echo $tugas_images_sesudah[$j]['filename'] ?>"
                                                         alt="Image Sesudah" 
                                                         style="height: 20rem; object-fit: cover;">
+                                                    <br> <br>
+                                                    <h5 class="card-subtitle">Difoto oleh : <?php echo $tugas_images_sebelum[$j]['nama'] ?></h5>
                                                     <?php 
                                                     break;
                                                 } 
