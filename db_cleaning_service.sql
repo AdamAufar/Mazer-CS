@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 26, 2024 at 10:49 AM
+-- Generation Time: Aug 05, 2024 at 08:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,18 +39,7 @@ CREATE TABLE `absensi` (
 --
 
 INSERT INTO `absensi` (`id`, `user_id`, `filename`, `absen_at`) VALUES
-(12, 1, 'uploads/6682138a35ec4.png', '2024-07-01 09:25:14'),
-(38, 1, '../uploads/6684bf4b633f6.jpeg', '2024-07-03 10:02:35'),
-(39, 1, '../uploads/6684bf50d56c0.jpeg', '2024-07-03 10:02:40'),
-(40, 1, '../uploads/6684c29eb3c8a.jpeg', '2024-07-03 10:16:46'),
-(41, 1, '../uploads/6684d9a86bfd3.jpeg', '2024-07-03 11:55:04'),
-(42, 1, '../uploads/6684d9b7384d6.jpeg', '2024-07-03 11:55:19'),
-(43, 1, '../uploads/6684e77835127.jpeg', '2024-07-03 12:54:00'),
-(44, 1, '../uploads/6686716dcb27d.jpg', '2024-07-04 16:54:53'),
-(45, 1, '../uploads/668671e158b36.jpg', '2024-07-04 16:56:49'),
-(46, 1, '../uploads/668671e91cddc.jpg', '2024-07-04 16:56:57'),
-(49, 1, 'uploads/668754ef54499.png', '2024-07-05 09:05:35'),
-(50, 3, '../uploads/absensi/66a1c164e87e3.jpg', '2024-07-25 10:07:16');
+(51, 3, '../uploads/absensi/66b04b2a91f9c.jpg', '2024-08-05 10:46:50');
 
 -- --------------------------------------------------------
 
@@ -72,18 +61,9 @@ CREATE TABLE `image_tugas_harian` (
 --
 
 INSERT INTO `image_tugas_harian` (`id`, `tugas_id`, `filename`, `status`, `created_at`, `submitted_by`) VALUES
-(1, 1, 'uploads/6667ca6428303.png', 0, '2024-06-11 10:54:12', 0),
-(2, 3, 'uploads/6667ca7278a2d.png', 0, '2024-06-11 10:54:26', 0),
-(3, 3, 'uploads/6667ca8e7ab17.png', 1, '2024-06-11 10:54:54', 0),
-(5, 1, 'uploads/666a9bf9076c2.png', 1, '2024-06-13 14:12:57', 0),
-(7, 4, 'uploads/667e30cff2df8.png', 0, '2024-06-28 10:41:04', 0),
-(8, 9, 'uploads/668213940f15e.png', 0, '2024-07-01 09:25:24', 0),
-(9, 9, 'uploads/668213b579339.png', 1, '2024-07-01 09:25:57', 0),
-(10, 1, '../uploads/tugasHarian/66a1c250df8d3.jpg', 0, '2024-07-25 10:11:12', 3),
-(11, 1, '../uploads/tugasHarian/66a1c266a21ea.jpg', 1, '2024-07-25 10:11:34', 3),
-(12, 2, '../uploads/tugasHarian/66a1c5bf2ee8d.jpg', 0, '2024-07-25 10:25:51', 3),
-(13, 2, '../uploads/tugasHarian/66a1cceb1a29f.jpg', 1, '2024-07-25 10:56:27', 3),
-(14, 9, '../uploads/tugasHarian/66a1d2dc96ff4.jpg', 0, '2024-07-25 11:21:48', 3);
+(21, 1, '../uploads/tugasHarian/66b0657a872bf.jpg', 0, '2024-08-05 12:39:06', 3),
+(22, 3, '../uploads/tugasHarian/66b06589ea1c8.jpg', 0, '2024-08-05 12:39:21', 3),
+(23, 3, '../uploads/tugasHarian/66b06594a1cbe.jpg', 1, '2024-08-05 12:39:32', 3);
 
 -- --------------------------------------------------------
 
@@ -101,6 +81,15 @@ CREATE TABLE `komplain` (
   `catatan` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `komplain`
+--
+
+INSERT INTO `komplain` (`id`, `nama`, `tugas_id`, `filename`, `followup`, `status`, `catatan`, `created_at`) VALUES
+(17, 'hono', 3, '../uploads/komplain/66b068dd8c823.jpg', '-', 2, 'gjvkbcf', '2024-08-05 12:53:33'),
+(18, 'honi', 3, '../uploads/komplain/66b0698da1213.jpg', '-', 1, 'fkgmkh', '2024-08-05 12:56:29'),
+(19, 'honi', 3, '../uploads/komplain/66b0699260e1d.jpg', '-', 1, 'fkgmkh', '2024-08-05 12:56:34');
 
 -- --------------------------------------------------------
 
@@ -140,16 +129,14 @@ CREATE TABLE `tugas_harian` (
 
 INSERT INTO `tugas_harian` (`id`, `lokasi`, `details`, `status`) VALUES
 (1, 2, 'Lantai sudah di pel dengan bersih', 1),
-(2, 2, 'Semua Air Minum karyawan sudah terisi', 1),
-(3, 2, 'Jendela sudah di lap', 0),
+(2, 2, 'Semua Air Minum karyawan sudah terisi', 0),
+(3, 2, 'Jendela sudah di lap', 1),
 (4, 2, 'Semua tempat sampah dibuang', 0),
 (5, 1, 'Pel Lantai', 1),
 (6, 1, 'Isi dispenser', 1),
 (7, 1, 'Sapu lantai', 1),
 (8, 1, 'Lap jendela', 1),
-(9, 2, 'Bersihin meja', 1),
-(10, 2, 'bersihin toilet', 1),
-(11, 2, 'Tugas Baruuuuu lt3', 0);
+(9, 2, 'Bersihin meja', 0);
 
 -- --------------------------------------------------------
 
@@ -174,7 +161,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nik`, `jabatan`, `status`) VALUES
 (1, 'petugas1', 'pass1', 'Fathan Petugas', '123456489', 'Cleaning Service', 0),
 (2, 'petugas2', 'pass2', 'Petugas Dua', '23465789', 'Cleaning Service', 0),
-(3, 'admin1', 'admin1', 'Admin Satu', '987678912', 'Admin', 1);
+(3, 'admin1', 'admin1', 'Admin Satu', '987678912', 'Admin', 0);
 
 --
 -- Indexes for dumped tables
@@ -229,19 +216,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `image_tugas_harian`
 --
 ALTER TABLE `image_tugas_harian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `komplain`
 --
 ALTER TABLE `komplain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `lokasi`
@@ -253,7 +240,7 @@ ALTER TABLE `lokasi`
 -- AUTO_INCREMENT for table `tugas_harian`
 --
 ALTER TABLE `tugas_harian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
