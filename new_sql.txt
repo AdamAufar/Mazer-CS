@@ -1,4 +1,0 @@
-
-ALTER TABLE `image_tugas_harian` ADD `submitted_by` INT(11) NOT NULL AFTER `created_at`;
-
-INSERT INTO `users` (`id`, `username`, `password`, `nama`, `nik`, `jabatan`, `status`) VALUES (NULL, 'admin1', 'admin1', 'Admin Satu', '987678912', 'Admin', '0');

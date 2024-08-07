@@ -21,6 +21,15 @@ $currentDate = date('Y-m-d', time());
 $startDate = date(date('Y', time()) . '-' . date('m', time()) . '-01');
 $lastDate = date("Y-m-t", strtotime($currentDate));
 
+
+// GET current date absensi image and absen time
+$sql = "SELECT filename, absen_at
+        FROM absensi 
+        WHERE user_id = $id AND date_format(absen_at, '%Y-%m-%d') = '$currentDate'";
+$query_absen_image = mysqli_query($conn, $sql);
+$absensi_image = mysqli_fetch_assoc($query_absen_image);
+
+
 // GET list tugas harian untuk $lokasi
 $lokasi = $_SESSION['lokasi'];
 $sql = "SELECT id, details, status FROM tugas_harian WHERE lokasi='$lokasi'";

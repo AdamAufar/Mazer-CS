@@ -84,6 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUploadSesudah'])) {
     $_SESSION['error_message'] = "No photo data received!";
 }
 
+// GET current date absensi image and absen time
+$sql = "SELECT filename, absen_at
+        FROM absensi 
+        WHERE user_id = $id AND date_format(absen_at, '%Y-%m-%d') = '$currentDate'";
+$query_absen_image = mysqli_query($conn, $sql);
+$absensi_image = mysqli_fetch_assoc($query_absen_image);
+
 // GET list tugas harian untuk $lokasi
 $lokasiId = $_SESSION['lokasi'];
 $sql = "SELECT id, details, status

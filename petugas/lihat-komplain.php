@@ -71,6 +71,15 @@ $result1 = mysqli_query($conn, $sql);
 if (!$result1) die('Error executing query: ' . mysqli_error($conn));
 $allKomplain =  mysqli_fetch_all($result1);
 
+
+// GET current date absensi image and absen time
+$sql = "SELECT filename, absen_at
+        FROM absensi 
+        WHERE user_id = $id AND date_format(absen_at, '%Y-%m-%d') = '$currentDate'";
+$query_absen_image = mysqli_query($conn, $sql);
+$absensi_image = mysqli_fetch_assoc($query_absen_image);
+
+
 ?>
 
 <div id="main">
