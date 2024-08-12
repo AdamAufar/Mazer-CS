@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['detail']) && isset($_POST['lokasi'])) {
         $detail = mysqli_real_escape_string($conn, $_POST['detail']);
         $lokasi = mysqli_real_escape_string($conn, $_POST['lokasi']);
-        $sql = "INSERT INTO tugas_harian (details, lokasi, status) VALUES ('$detail', '$lokasi', 0)";
+        $sql = "INSERT INTO tugas_harian (details, lokasi, status) VALUES ('$detail', '$lokasi', 1)";
         if (mysqli_query($conn, $sql)) {
             // Redirect to avoid form resubmission
             header("Location: " . $_SERVER['PHP_SELF']);

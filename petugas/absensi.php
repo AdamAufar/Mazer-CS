@@ -49,7 +49,7 @@ $sql = "SELECT filename,
         FROM absensi 
         WHERE user_id = $id 
             AND date_format(absen_at, '%Y-%m-%d') BETWEEN '$startDate' AND '$currentDate'
-        ORDER BY absen_at";
+        ORDER BY absen_at DESC";
 $all_absen = mysqli_query($conn, $sql);
 $_SESSION['all_absen'] = mysqli_fetch_all($all_absen);
 
@@ -108,68 +108,68 @@ $_SESSION['all_absen'] = mysqli_fetch_all($all_absen);
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped mb-0">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Hari</th>
-                                                                                <th>Tanggal</th>
-                                                                                <th>Jam Absen</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <?php 
-                                                                            $j = 0;
-                                                                            $begin = new DateTime($startDate);
-                                                                            $end = new DateTime($currentDate);
-                                                                            $all_absen = $_SESSION['all_absen'];
-                                                                            for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
-                                                                                echo '<tr>';
-                                                                                echo '<td>';
-                                                                                    switch (date('w', strtotime($i->format("Y-m-d")))) {
-                                                                                        case "0":
-                                                                                        echo "Minggu";
-                                                                                        break;
-                                                                                        case "1":
-                                                                                        echo "Senin";
-                                                                                        break;
-                                                                                        case "2":
-                                                                                        echo "Selasa";
-                                                                                        break;
-                                                                                        case "3":
-                                                                                        echo "Rabu";
-                                                                                        break;
-                                                                                        case "4":
-                                                                                        echo "Kamis";
-                                                                                        break;
-                                                                                        case "5":
-                                                                                        echo "Jumat";
-                                                                                        break;
-                                                                                        case "6":
-                                                                                        echo "Sabtu";
-                                                                                        break;
-                                                                                    }
-                                                                                echo '</td>';
-                                                                                echo '<td>' . $i->format("d-m-Y") . '</td>';
-                                                                                
-                                                                                if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
-                                                                                    if ($all_absen[$j][2] > '08:00:00') {
-                                                                                        echo '<td><span style="color: red;">' . $all_absen[$j][2] . '</span></td>';
-                                                                                    } else {
-                                                                                        echo '<td>' . $all_absen[$j][2] . '</td>';
-                                                                                    }
-                                                                                    $j++;
-                                                                                // IF sat or sun then print LIBUR
-                                                                                } else if (date('w', strtotime($i->format("Y-m-d"))) == '6' || date('w', strtotime($i->format("Y-m-d"))) == '0') {
-                                                                                    echo '<td>LIBUR</td>';
-                                                                                    if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
-                                                                                        $j++;
-                                                                                    }
-                                                                                } else {
-                                                                                    echo '<td>-</td>';
-                                                                                }
-                                                                                echo '</tr>';
-                                                                            }
-                                                                            ?>
-                                                                        </tbody>
+                                        <thead>
+                                            <tr>
+                                                <th>Hari</th>
+                                                <th>Tanggal</th>
+                                                <th>Jam Absen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                            $j = 0;
+                                            $begin = new DateTime($startDate);
+                                            $end = new DateTime($currentDate);
+                                            $all_absen = $_SESSION['all_absen'];
+                                            for ($i = $end; $i >= $begin; $i->modify('-1 day')) {
+                                                echo '<tr>';
+                                                echo '<td>';
+                                                    switch (date('w', strtotime($i->format("Y-m-d")))) {
+                                                        case "0":
+                                                        echo "Minggu";
+                                                        break;
+                                                        case "1":
+                                                        echo "Senin";
+                                                        break;
+                                                        case "2":
+                                                        echo "Selasa";
+                                                        break;
+                                                        case "3":
+                                                        echo "Rabu";
+                                                        break;
+                                                        case "4":
+                                                        echo "Kamis";
+                                                        break;
+                                                        case "5":
+                                                        echo "Jumat";
+                                                        break;
+                                                        case "6":
+                                                        echo "Sabtu";
+                                                        break;
+                                                    }
+                                                echo '</td>';
+                                                echo '<td>' . $i->format("d-m-Y") . '</td>';
+                                                
+                                                if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
+                                                    if ($all_absen[$j][2] > '08:00:00') {
+                                                        echo '<td><span style="color: red;">' . $all_absen[$j][2] . '</span></td>';
+                                                    } else {
+                                                        echo '<td>' . $all_absen[$j][2] . '</td>';
+                                                    }
+                                                    $j++;
+                                                // IF sat or sun then print LIBUR
+                                                } else if (date('w', strtotime($i->format("Y-m-d"))) == '6' || date('w', strtotime($i->format("Y-m-d"))) == '0') {
+                                                    echo '<td>LIBUR</td>';
+                                                    if (isset($all_absen[$j][1]) && $i->format("Y-m-d") == $all_absen[$j][1]) {
+                                                        $j++;
+                                                    }
+                                                } else {
+                                                    echo '<td>-</td>';
+                                                }
+                                                echo '</tr>';
+                                            }
+                                            ?>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
